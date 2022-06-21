@@ -1,0 +1,12 @@
+<configuration>
+	<property>
+		<name>dfs.namenode.name.dir</name><value>/app/data/hadoop/nameNode</value>
+	</property>
+	<property>
+		<name>dfs.datanode.data.dir</name><value>/app/data/hadoop/dataNode</value>
+	</property>
+	<property>
+		<name>dfs.replication</name>
+		<value>2</value>
+	</property>
+</configuration>

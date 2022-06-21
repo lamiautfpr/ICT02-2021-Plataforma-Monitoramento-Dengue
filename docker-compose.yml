@@ -1,0 +1,26 @@
+version: "3"
+
+services:
+  master:
+    build:
+      context: .
+      target: master
+    container_name: hadoop-master
+    hostname: hadoop-master
+    ports:
+      - 8080:8080
+      - 8088:8088
+      - 9870:9870
+    volumes:
+      - ./data/master:/app/data
+
+  slave1:
+    build:
+      context: .
+      target: slave
+    container_name: hadoop-slave1
+    hostname: hadoop-slave1
+    depends_on:
+      - master
+    volumes:
+      - ./data/slave1:/app/data
