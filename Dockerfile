@@ -87,18 +87,26 @@ ENV HIVE_HOME /usr/local/hive
 # Variáveis de ambiente utilizadas pelo FLUME
 ENV FLUME_HOME /usr/local/flume
 
-# Copia os arquivos de instalação do Flume e Hive para a pasta de trabalho
-COPY ["soft/apache*", "./"]
+# Copia os arquivos de instalação do Flume, Hive e Sqoop para a pasta de trabalho
+COPY ["soft/apache*", "soft/Sqoop/sqoop-1.4.7.bin__hadoop-2.6.0.tar.gz", "./"]
 
 # Descompacta e move os softwares para seus destinos definidos nas variáveis de ambiente
 RUN tar xzf apache-hive-3.1.2-bin.tar.gz && mv apache-hive-3.1.2-bin $HIVE_HOME
 RUN tar xzf apache-flume-1.9.0-bin.tar.gz && mv apache-flume-1.9.0-bin $FLUME_HOME
+RUN tar xzf sqoop-1.4.7.bin__hadoop-2.6.0.tar.gz && mv sqoop-1.4.7.bin__hadoop-2.6.0 $SQOOP_HOME
 
 # Remove os arquivos desnecessários
 RUN rm /app/*
 
 # Adiciona as pastas bin e sbin dos programas no PATH
-RUN echo "PATH=$PATH:$HADOOP_HOME/bin:$HADOOP_HOME/sbin:$SPARK_HOME/bin:$SPARK_HOME/sbin:$FLUME_HOME/bin:$HIVE_HOME/bin" >> ~/.bashrc
+RUN echo "PATH=$PATH:$HADOOP_HOME/bin:$HADOOP_HOME/sbin:$SPARK_HOME/bin:$SPARK_HOME/sbin:$FLUME_HOME/bin:$HIVE_HOME/bin:$SQOOP_HOME/bin" >> ~/.bashrc
+
+# Copia arquivo de configuração do projeto para a pasta do Sqoop, conf e .jars
+ADD configs/sqoop/* $SQOOP_HOME/conf
+ADD soft/Sqoop/jars/* $SQOOP_HOME/lib
+
+# Remove .jar da lib do sqoop pra evitar conflito
+RUN rm $SQOOP_HOME/lib/commons-lang3-3.4.jar 
 
 # Copia os arquivos de configurações do projeto para a pasta do Flume
 ADD configs/flume/* $FLUME_HOME
